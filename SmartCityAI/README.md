@@ -7,7 +7,7 @@
   <img src="https://img.shields.io/badge/Machine%20Learning-AI-green?style=for-the-badge">
 </p>
 
-> **SmartCity AI** is an AI-powered urban intelligence platform that predicts future city development using Machine Learning. The system forecasts **Traffic Congestion**, **Air Quality (AQI)**, and **Population Growth** for **20 major Indian cities** between **2000 and 2100** through an interactive dashboard with charts, maps, and AI-generated insights.
+> **SmartCity AI** is an AI-powered urban intelligence platform that predicts future city development using Machine Learning. The system forecasts **Traffic Congestion**, **Air Quality (AQI)**, and **Population Growth** for **20 major Indian cities** through an interactive dashboard with charts, maps, and AI-generated insights.
 
 ---
 
@@ -26,9 +26,6 @@ SmartCity AI enables users to analyze future urban growth by selecting a city, p
 * 🌍 20 Major Indian Cities
 * 📅 Forecasts from 2000–2100
 * 💡 AI Recommendations & Risk Assessment
-* 🌙 Dark / Light Theme
-* ⚡ Offline Prediction Support
-
 ---
 
 ## 🛠️ Tech Stack
@@ -83,9 +80,7 @@ python server.py
 ---
 
 ## 📸 Screenshots
-
-> Add screenshots of the Dashboard, Prediction Results, Maps, and AI Advisor here.
-
+<img width="1913" height="931" alt="image" src="https://github.com/user-attachments/assets/c6bc851f-e4de-4c41-8d23-c67b8545997b" />
 ---
 
 ## 👨‍💻 Author
