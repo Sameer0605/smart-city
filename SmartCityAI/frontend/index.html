@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>SmartCity AI — India Urban Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="css/theme.css"/>
+  <link rel="stylesheet" href="css/layout.css"/>
+  <link rel="stylesheet" href="css/components.css"/>
+</head>
+<body>
+  <!-- SVG Gradient defs for KPI gauges -->
+  <svg width="0" height="0" class="svg-hidden">
+    <defs>
+      <linearGradient id="grad-pop" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%"   stop-color="#a855f7"/>
+        <stop offset="100%" stop-color="#7c3aed"/>
+      </linearGradient>
+      <linearGradient id="grad-veh" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%"   stop-color="#6366f1"/>
+        <stop offset="100%" stop-color="#3b82f6"/>
+      </linearGradient>
+      <linearGradient id="grad-gc" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%"   stop-color="#22c55e"/>
+        <stop offset="100%" stop-color="#16a34a"/>
+      </linearGradient>
+      <linearGradient id="grad-ti" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%"   stop-color="#f97316"/>
+        <stop offset="100%" stop-color="#d97706"/>
+      </linearGradient>
+    </defs>
+  </svg>
+
+
+<!-- BOOT -->
+<div id="boot">
+  <div class="boot-icon">🏙️</div>
+  <div class="boot-t">SmartCity AI</div>
+  <div class="boot-s">India Urban Intelligence Platform</div>
+  <div class="boot-bar-w"><div class="boot-bar-f"></div></div>
+  <div class="boot-log" id="bootLog">Initialising...</div>
+</div>
+
+<!-- ═══ SIDEBAR ═══ -->
+<aside id="sb">
+  <div class="sb-brand">
+    <div class="sb-brand-row">
+      <div class="sb-brand-icon">🏙️</div>
+      <div class="sb-brand-name">SmartCity</div>
+    </div>
+    <div class="sb-brand-sub">AI Urban Prediction Platform</div>
+  </div>
+
+  <nav class="sb-nav">
+    <div class="sb-section-lbl">Main Menu</div>
+    <div class="nav-item active" onclick="setTab('dashboard')"><span class="nav-icon">📊</span>Dashboard</div>
+    <div class="nav-item" onclick="setTab('map')"><span class="nav-icon">🗺</span>Map View</div>
+    <div class="nav-item" onclick="setTab('analytics')"><span class="nav-icon">📈</span>Analytics</div>
+    <div class="nav-item" onclick="setTab('forecast')"><span class="nav-icon">🔮</span>ML Forecast</div>
+    <div class="nav-item" onclick="setTab('ai')"><span class="nav-icon">🤖</span>AI Advisor<span class="nav-badge red" id="navBadge">0</span></div>
+    <div class="sb-section-lbl">Data</div>
+    <div class="nav-item" onclick="setTab('reports')"><span class="nav-icon">📋</span>Reports</div>
+    <div class="nav-item"><span class="nav-icon">⚙️</span>Settings</div>
+  </nav>
+
+  <div class="sb-footer">
+    <div class="api-pill">
+      <div class="api-dot" id="apiDot"></div>
+      <div class="api-label" id="apiLabel">Checking backend...</div>
+      <div class="api-ms" id="apiMs"></div>
+    </div>
+  </div>
+</aside>
+
+<!-- ═══ MAIN ═══ -->
+<div id="main">
+
+  <!-- TOPBAR -->
+  <header id="topbar">
+    <div>
+      <div class="tb-title" id="tbTitle">Smart City Dashboard</div>
+      <div class="tb-sub" id="tbSub">AI-powered urban prediction system · India</div>
+    </div>
+    <div class="tb-right">
+      <!-- 2 Theme Buttons — Light | Dark -->
+      <div class="theme-btn-group">
+        <button class="theme-btn-light" id="btnLight" onclick="setLightMode()" title="Light Mode">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          Light
+        </button>
+        <button class="theme-btn-dark" id="btnDark" onclick="setDarkMode()" title="Dark Mode">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          Dark
+        </button>
+      </div>
+      <!-- Profile — rightmost -->
+      <div class="profile-wrap" id="profileWrap">
+        <button class="profile-trigger" id="profileBtn" onclick="toggleProfile()" title="Admin">
+          <div class="profile-trigger-avatar">A</div>
+          <div class="profile-trigger-info">
+            <div class="profile-trigger-name">Admin</div>
+            <div class="profile-trigger-role">City Planner</div>
+          </div>
+          <svg class="profile-trigger-caret" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="profile-dropdown" id="profileDropdown">
+          <div class="profile-header">
+            <div class="profile-avatar-lg">A</div>
+            <div>
+              <div class="profile-name">Admin User</div>
+              <div class="profile-role">City Planner</div>
+            </div>
+          </div>
+          <div class="profile-divider"></div>
+          <div class="profile-item" onclick="toggleProfile()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Profile Settings
+          </div>
+          <div class="profile-item" onclick="doExport();toggleProfile()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Export Report
+          </div>
+          <div class="profile-divider"></div>
+          <div class="profile-item profile-item-danger" onclick="toggleProfile()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Sign Out
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+
+  <!-- SCROLL AREA -->
+  <div id="scroll">
+
+    <!-- ══ DASHBOARD ══ -->
+    <div class="pane active" id="pane-dashboard">
+      <div class="page-pad">
+
+        <!-- Predictor Card — Premium -->
+        <div class="predictor-premium-card" id="predictorCard">
+          <div class="ppc-left">
+            <div class="ppc-brand">
+              <div class="ppc-brand-icon">🤖</div>
+              <div>
+                <div class="ppc-title">SmartCity AI Predictor</div>
+                <div class="ppc-sub">Select city &amp; year to run ML predictions across all modules</div>
+              </div>
+            </div>
+            <div class="ppc-controls">
+              <div class="ppc-field">
+                <label class="ppc-label">City</label>
+                <select class="ppc-select" id="citySelect" title="Select City" onchange="onCityChange()">
+                  <option value="" selected>— Select City —</option>
+                  <option value="Mumbai">Mumbai</option>
+                  <option value="Delhi">Delhi</option>
+                  <option value="Bangalore">Bengaluru</option>
+                  <option value="Hyderabad">Hyderabad</option>
+                  <option value="Chennai">Chennai</option>
+                  <option value="Kolkata">Kolkata</option>
+                  <option value="Pune">Pune</option>
+                  <option value="Ahmedabad">Ahmedabad</option>
+                  <option value="Jaipur">Jaipur</option>
+                  <option value="Surat">Surat</option>
+                  <option value="Lucknow">Lucknow</option>
+                  <option value="Kanpur">Kanpur</option>
+                  <option value="Nagpur">Nagpur</option>
+                  <option value="Bhopal">Bhopal</option>
+                  <option value="Patna">Patna</option>
+                  <option value="Vadodara">Vadodara</option>
+                  <option value="Coimbatore">Coimbatore</option>
+                  <option value="Visakhapatnam">Visakhapatnam</option>
+                  <option value="Indore">Indore</option>
+                  <option value="Chandigarh">Chandigarh</option>
+                </select>
+              </div>
+              <div class="ppc-field">
+                <label class="ppc-label">Prediction Year</label>
+                <select class="ppc-select" id="yearInput" title="Prediction Year">
+                  <option value="2026" selected>2026</option>
+                </select>
+              </div>
+
+              <button class="ppc-predict-btn" id="btnPredict" onclick="runPredict()">
+                <span class="ppc-btn-icon">▶</span>
+                <span class="ppc-btn-text">Run Prediction</span>
+              </button>
+            </div>
+          </div>
+          <div class="ppc-right" id="ppcStatus"></div>
+        </div>
+
+        <!-- Empty state — shown before first prediction -->
+        <div id="dashEmpty" class="dash-empty-state">
+          <div class="des-icon">🏙️</div>
+          <div class="des-title">Select a City &amp; Year to Begin</div>
+          <div class="des-sub">Choose your city, set the prediction year, then click <b>Predict ▶</b> to see AI-powered urban forecasts</div>
+          <div class="des-steps">
+            <div class="des-step"><span class="des-step-num">1</span><span>Select City</span></div>
+            <div class="des-step"><span class="des-step-num">2</span><span>Set Year</span></div>
+            <div class="des-step"><span class="des-step-num">3</span><span>Click Predict</span></div>
+          </div>
+        </div>
+
+        <!-- Results — hidden until Predict runs -->
+        <div id="dashResults" class="is-hidden">
+
+        <!-- KPIs -->
+        <div class="kpi-row">
+          <div class="kpi-card">
+            <div class="kpi-left">
+              <div class="kpi-lbl">Population</div>
+              <div class="kpi-val kpi-text-purple" id="kv-pop">—</div>
+              <div class="kpi-sub" id="ks-pop">Loading...</div>
+            </div>
+            <div class="gauge">
+              <svg viewBox="0 0 70 70"><circle class="g-track" cx="35" cy="35" r="27"/><circle class="g-arc" id="g-pop" cx="35" cy="35" r="27" stroke="#7c3aed" stroke-dasharray="169.6" stroke-dashoffset="169.6"/></svg>
+              <div class="gauge-pct" id="gp-pop">0%</div>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-left">
+              <div class="kpi-lbl">Vehicles</div>
+              <div class="kpi-val kpi-text-blue" id="kv-veh">—</div>
+              <div class="kpi-sub" id="ks-veh">Traffic Index</div>
+            </div>
+            <div class="gauge">
+              <svg viewBox="0 0 70 70"><circle class="g-track" cx="35" cy="35" r="27"/><circle class="g-arc" id="g-veh" cx="35" cy="35" r="27" stroke="#1a56db" stroke-dasharray="169.6" stroke-dashoffset="169.6"/></svg>
+              <div class="gauge-pct" id="gp-veh">0%</div>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-left">
+              <div class="kpi-lbl">Green Cover</div>
+              <div class="kpi-val kpi-text-green" id="kv-gc">—</div>
+              <div class="kpi-sub">Green zone index</div>
+            </div>
+            <div class="gauge">
+              <svg viewBox="0 0 70 70"><circle class="g-track" cx="35" cy="35" r="27"/><circle class="g-arc" id="g-gc" cx="35" cy="35" r="27" stroke="#16a34a" stroke-dasharray="169.6" stroke-dashoffset="169.6"/></svg>
+              <div class="gauge-pct" id="gp-gc">0%</div>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-left">
+              <div class="kpi-lbl">Traffic Index</div>
+              <div class="kpi-val kpi-text-amber" id="kv-ti">—</div>
+              <div class="kpi-sub" id="ks-ti">AQI level</div>
+            </div>
+            <div class="gauge">
+              <svg viewBox="0 0 70 70"><circle class="g-track" cx="35" cy="35" r="27"/><circle class="g-arc" id="g-ti" cx="35" cy="35" r="27" stroke="#d97706" stroke-dasharray="169.6" stroke-dashoffset="169.6"/></svg>
+              <div class="gauge-pct" id="gp-ti">0%</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Year Slider -->
+        <div class="card year-card">
+          <div class="year-body">
+            <div class="year-row">
+              <div>
+                <div class="year-label">Time Travel — Prediction Year</div>
+                <div class="year-help">Drag to explore prediction years from 2026 to 2100</div>
+              </div>
+              <div class="year-chip" id="yearChip">2026</div>
+            </div>
+            <input type="range" class="yr" id="yearSlider" min="2026" max="2100" value="2026" oninput="onSlider(+this.value)"/>
+            <div class="yr-range-labels"><span>2026</span><span>2035</span><span>2045</span><span>2060</span><span>2100</span></div>
+          </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="charts-grid">
+          <div class="card chart-body chart-min-280">
+            <div class="card-head">
+              <div><div class="card-title">City Growth Metrics</div><div class="card-sub">Year-wise trend: Traffic, AQI & Population</div></div>
+              <span class="badge badge-blue">LIVE</span>
+            </div>
+            <div class="chart-wrap"><canvas id="c-growth"></canvas></div>
+          </div>
+          <div class="card chart-body chart-min-280">
+            <div class="card-head">
+              <div><div class="card-title">Feature Distribution</div><div class="card-sub">Current year breakdown</div></div>
+              <span class="badge badge-teal">AI</span>
+            </div>
+            <div class="chart-wrap"><canvas id="c-dist"></canvas></div>
+          </div>
+        </div>
+
+        </div><!-- /dashResults -->
+
+      </div>
+    </div><!-- /dashboard -->
+
+    <!-- ══ MAP ══ — Real Google Maps -->
+    <div id="pane-map">
+      <div id="map-wrap">
+
+        <!-- Loading -->
+        <div class="gmap-loading" id="gmapLoading">
+          <div class="gmap-loading-icon">🗺️</div>
+          <div class="gmap-loading-text">Loading Google Maps…</div>
+          <div class="gmap-loading-sub" id="loadingCitySub">Opening map</div>
+        </div>
+
+        <!-- Google Maps iframe -->
+        <iframe id="gmap-iframe" title="Google Maps preview" src="" allowfullscreen onload="onGmapLoad()"></iframe>
+
+        <!-- City info HUD -->
+        <div id="gmap-hud">
+          <div class="ghud-city" id="ghud-city">—</div>
+          <div class="ghud-meta">Year: <span id="ghud-year">—</span> · Model: <span id="ghud-model">LSTM</span></div>
+          <div class="ghud-vals">
+            <div><div class="ghud-val hud-text-purple" id="ghud-pop">—</div><div class="ghud-lbl">Pop(M)</div></div>
+            <div><div class="ghud-val hud-text-blue"   id="ghud-traf">—</div><div class="ghud-lbl">Traffic</div></div>
+            <div><div class="ghud-val hud-text-amber"  id="ghud-aqi">—</div><div class="ghud-lbl">AQI</div></div>
+          </div>
+        </div>
+
+        <!-- Top-right controls -->
+        <div id="map-controls">
+
+          <!-- Map selector + overlay bar combined -->
+          <div class="map-layers-panel">
+
+            <!-- Map Layers selector row -->
+            <div class="layers-section-title">🗺 Map Layer</div>
+            <div class="map-type-chips">
+              <button class="mchip active" id="mt-default"   onclick="switchMapType('default')">
+                <span class="mchip-icon">🗺</span><span>Default</span>
+              </button>
+              <button class="mchip" id="mt-satellite" onclick="switchMapType('satellite')">
+                <span class="mchip-icon">🛰</span><span>Satellite</span>
+              </button>
+              <button class="mchip" id="mt-terrain"   onclick="switchMapType('terrain')">
+                <span class="mchip-icon">⛰</span><span>Terrain</span>
+              </button>
+            </div>
+
+            <!-- Overlays -->
+            <div class="layers-section-title">✨ Overlays</div>
+            <div class="overlay-chips">
+              <button class="ochip" id="ov-traffic"    onclick="toggleMapOverlay('traffic')">
+                <span>🚦</span> Traffic <span class="ochip-dot" id="ov-traffic-s"></span>
+              </button>
+              <button class="ochip" id="ov-airquality" onclick="toggleMapOverlay('airquality')">
+                <span>💨</span> Air Quality <span class="ochip-dot" id="ov-airquality-s"></span>
+              </button>
+              <button class="ochip" id="ov-streetview" onclick="toggleMapOverlay('streetview')">
+                <span>🧍</span> Street View <span class="ochip-dot" id="ov-streetview-s"></span>
+              </button>
+              <button class="ochip" id="ov-transit"    onclick="toggleMapOverlay('transit')">
+                <span>🚇</span> Transit <span class="ochip-dot" id="ov-transit-s"></span>
+              </button>
+            </div>
+          </div>
+
+          <!-- AI Prediction -->
+          <div id="ai-panel">
+            <div class="aip-title">🤖 AI Prediction · <span id="aip-year" class="aip-text-blue">2026</span></div>
+            <div class="aip-row"><span class="aip-lbl">🚦 Traffic Risk</span><span class="aip-val aip-text-red" id="aip-t">—</span></div>
+            <div class="aip-bar"><div class="aip-fill aip-fill-red" id="aip-tb"></div></div>
+            <div class="aip-row mt-5"><span class="aip-lbl">💨 Air Quality</span><span class="aip-val aip-text-amber" id="aip-a">—</span></div>
+            <div class="aip-bar"><div class="aip-fill aip-fill-amber" id="aip-ab"></div></div>
+            <div class="aip-row mt-5"><span class="aip-lbl">👥 Pop. Pressure</span><span class="aip-val aip-text-purple" id="aip-p">—</span></div>
+            <div class="aip-bar"><div class="aip-fill aip-fill-purple" id="aip-pb"></div></div>
+            <div class="aip-models">
+              <button class="aip-mbtn active" id="aip-lstm" onclick="setModel('LSTM')">LSTM</button>
+              <button class="aip-mbtn"        id="aip-rf"   onclick="setModel('RF')">RF</button>
+              <button class="aip-mbtn"        id="aip-lr"   onclick="setModel('LR')">LR</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Overlay info panel (bottom centre) -->
+        <div id="overlay-info">
+          <div class="oi-title">
+            <span id="oi-icon">🚦</span>
+            <span id="oi-title-text">Traffic</span>
+            <button class="oi-close" onclick="closeOverlayInfo()">✕</button>
+          </div>
+          <div class="oi-legend" id="oi-legend"></div>
+          <div class="oi-toggle">
+            <div class="oi-switch" id="oi-switch" onclick="toggleOiSwitch()"></div>
+            <span id="oi-toggle-label">Live data active</span>
+          </div>
+        </div>
+
+      </div><!-- /map-wrap -->
+
+      <!-- Explorer bar — famous places -->
+      <div id="explorer-bar">
+        <div class="exp-header">
+          <div class="exp-header-title" id="expTitle">Explorer</div>
+          <div class="exp-header-sub">Click photo to view place</div>
+        </div>
+        <div class="exp-scroll" id="expScroll">
+          <div class="exp-placeholder" id="expPlaceholder">
+            <div class="exp-ph-icon">🏙️</div>
+            <div class="exp-ph-text">Select a city to explore famous places</div>
+          </div>
+        </div>
+        <div class="exp-nav">
+          <button class="exp-nav-btn" onclick="expL()">‹</button>
+          <button class="exp-nav-btn" onclick="expR()">›</button>
+        </div>
+      </div>
+
+      <!-- Image Modal — shown when clicking explorer card -->
+      <div id="placeModal" onclick="closePlaceModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+          <button class="modal-close" onclick="closePlaceModal()">✕</button>
+          <div class="modal-img-wrap">
+            <img id="modalImg" src="" alt="" onerror="this.style.display='none';document.getElementById('modalImgFallback').style.display='flex'"/>
+            <div id="modalImgFallback" class="modal-img-fallback is-hidden"></div>
+          </div>
+          <div class="modal-body">
+            <div class="modal-type" id="modalType"></div>
+            <div class="modal-name" id="modalName"></div>
+            <div class="modal-city" id="modalCity"></div>
+            <div class="modal-desc" id="modalDesc"></div>
+            <div class="modal-actions">
+              <button class="modal-btn-primary" id="modalVisitBtn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                View on Map
+              </button>
+              <button class="modal-btn-secondary" onclick="closePlaceModal()">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /map -->
+
+
+
+
+    <!-- ══ ANALYTICS ══ -->
+    <div class="pane" id="pane-analytics">
+      <div class="page-pad">
+        <div class="layout-space-between">
+          <div><div class="section-title">Analytics</div><div class="section-sub">Historical 2000–2025 + AI Forecast 2026–2100</div></div>
+          <span class="badge badge-blue" id="an-city">—</span>
+        </div>
+        <div class="analytics-grid">
+          <div class="card chart-body chart-min-270">
+            <div class="card-head"><div><div class="card-title">Year-wise Trend — All Features</div><div class="card-sub">Traffic Index, AQI, Population over time</div></div><span class="badge badge-green">LIVE</span></div>
+            <div class="chart-wrap"><canvas id="c-trend"></canvas></div>
+          </div>
+          <div class="card chart-body chart-min-270">
+            <div class="card-head"><div><div class="card-title">City Composition</div><div class="card-sub">Current year distribution</div></div><span class="badge badge-teal">AI</span></div>
+            <div class="chart-wrap"><canvas id="c-donut"></canvas></div>
+          </div>
+        </div>
+        <div class="analytics-trio">
+          <div class="card chart-body chart-min-200">
+            <div class="card-head"><div class="card-title">Traffic Index</div><span class="badge badge-blue">PRED</span></div>
+            <div class="chart-wrap"><canvas id="c-traf"></canvas></div>
+          </div>
+          <div class="card chart-body chart-min-200">
+            <div class="card-head"><div class="card-title">Air Quality (AQI)</div><span class="badge badge-amber">FORECAST</span></div>
+            <div class="chart-wrap"><canvas id="c-aqi"></canvas></div>
+          </div>
+          <div class="card chart-body chart-min-200">
+            <div class="card-head"><div class="card-title">Population Growth</div><span class="badge badge-purple">ML</span></div>
+            <div class="chart-wrap"><canvas id="c-pop"></canvas></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ FORECAST ══ -->
+    <div class="pane" id="pane-forecast">
+      <div class="page-pad">
+        <div class="model-bar">
+          <div><div class="model-bar-title">ML Prediction Engine</div><div class="model-bar-sub">Compare LSTM · Random Forest · Linear Regression accuracy</div></div>
+          <div class="model-btns">
+            <button class="m-btn a-lstm" id="mb-LSTM" onclick="setModel('LSTM')">LSTM</button>
+            <button class="m-btn" id="mb-RF"   onclick="setModel('RF')">Random Forest</button>
+            <button class="m-btn" id="mb-LR"   onclick="setModel('LR')">Linear Reg.</button>
+          </div>
+        </div>
+        <div class="fc-grid mb-14">
+          <div class="card chart-body fc-full chart-min-260">
+            <div class="card-head"><div><div class="card-title">All Features — Normalised (0–100)</div><div class="card-sub">Historical + Predicted · Traffic / AQI / Population compared</div></div><span class="badge badge-blue">MULTI-FEATURE</span></div>
+            <div class="chart-wrap"><canvas id="c-fc"></canvas></div>
+          </div>
+          <div class="card chart-body chart-min-220">
+            <div class="card-head"><div class="card-title">Model Accuracy</div><span class="badge badge-green">R² Score</span></div>
+            <div class="chart-wrap"><canvas id="c-acc"></canvas></div>
+          </div>
+          <div class="card chart-body chart-min-220">
+            <div class="card-head"><div class="card-title">Traffic Confidence Band</div><span class="badge badge-teal">95% CI</span></div>
+            <div class="chart-wrap"><canvas id="c-ci"></canvas></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ AI ══ -->
+    <div class="pane" id="pane-ai">
+      <div class="page-pad">
+        <div class="layout-space-between">
+          <div><div class="section-title">AI Advisor</div><div class="section-sub" id="recMeta">—</div></div>
+        </div>
+        <div class="ai-grid">
+          <div id="recCards"></div>
+          <div>
+            <div class="tbl-card">
+              <div class="tbl-hd"><div class="tbl-hdtitle">Prediction Table</div><div class="tbl-hdmeta" id="predMeta">—</div></div>
+              <table class="pred-tbl"><thead><tr><th>Year</th><th>Traffic</th><th>AQI</th><th>Pop(M)</th><th>Risk</th></tr></thead><tbody id="predBody"></tbody></table>
+            </div>
+            <div class="risk-section">
+              <div class="risk-sec-hd">Risk Assessment — <span id="riskLbl">—</span></div>
+              <div id="riskBars"></div>
+            </div>
+            <div class="mcmp">
+              <div class="mcmp-hd">Model Comparison — <span id="cmpLbl">—</span></div>
+              <div id="mcRows"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ REPORTS ══ -->
+    <div class="pane" id="pane-reports">
+      <div class="page-pad">
+        <div class="card section-center-card">
+          <div class="section-icon-lg">📋</div>
+          <div class="section-title-lg">Export City Report</div>
+          <div class="section-sub-lg">Generate a complete prediction report for <b id="rep-city">—</b> · Year <b id="rep-year">—</b></div>
+          <button class="btn-predict report-btn" onclick="doExport()">⬇ &nbsp;Download Full Report</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /scroll -->
+
+  <!-- STATUS BAR -->
+  <div id="statusbar">
+    <div class="sb-stat">City: <b id="st-city">—</b></div>
+    <div class="sb-stat">Year: <b id="st-year">—</b></div>
+    <div class="sb-stat">Model: <b id="st-model">—</b></div>
+    <div class="sb-stat">Map Theme: <b id="st-theme">Standard</b></div>
+    <div class="status-actions">
+      <div class="sb-stat ok" id="st-api">API: Checking</div>
+      <div class="sb-stat ok">All Systems Operational</div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+
+  <!-- JS — loaded in dependency order -->
+  <script src="js/data.js"></script>
+  <script src="js/state.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/display.js"></script>
+  <script src="js/map.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/ai.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
